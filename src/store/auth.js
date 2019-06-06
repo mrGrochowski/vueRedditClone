@@ -2,15 +2,26 @@ import firebase from "@/firebase";
 
 const state = {
   user: {},
-  isLoggedIn: false
+  isLoggedIn: false,
 };
 
+const mutations = {
+  setUser(state,user){
+    state.user = user;
+    state.isLoggedIn = true;
+  }
+};
 
 const actions = {
-  async login({context}) {
+  async login({commit}) {
     const provider = new firebase.auth.GoogleAuthProvider();
-    const resault = await firebase.auth().signInWithPopup(provider);
-    console.log(resault.user);
+    const {user} = await firebase.auth().signInWithPopup(provider);
+    commit('setUser',{
+      id:user.uid,
+      name:user.displayName,
+      image:user.photoURL,
+      created_at:firebase.firestore.FieldValue.serverTimestamp(),
+    })
   }
 };
 
@@ -18,4 +29,5 @@ export default {
   namespaced: true,
   state,
   actions,
+  mutations,
 };
