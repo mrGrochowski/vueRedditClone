@@ -5,18 +5,42 @@
         <a class="navbar-item" href="https://bulma.io">
           VueRedditClone
         </a>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-primary" v-if="!isLoggedIn" @click="login()">
+                <strong>Login</strong>
+              </a>
+              <p class="control">
 
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+                <figure>
+                  <img class="is-rounded" :src="user.image">
+                </figure>
+                <a class="button is-light" v-if="isLoggedIn" @click="logout()">
+                  Logout
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
     <router-view class="container" />
   </div>
 </template>
+<script>
+  import {
+    mapActions,
+    mapState
+  } from "vuex";
+  export default {
+    computed: mapState('auth', ['user', 'isLoggedIn']),
+    methods: mapActions('auth', ['login', 'logout'])
+  };
 
+</script>
 <style lang="scss">
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
