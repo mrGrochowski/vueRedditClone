@@ -1,4 +1,5 @@
-import firebase from "@/firebase";
+import firebase from '@/firebase';
+import { longStackSupport } from 'q';
 
 const state = {
   user: {},
@@ -6,22 +7,24 @@ const state = {
 };
 
 const mutations = {
-  setUser(state,user){
-    state.user = user;
-    state.isLoggedIn = true;
-  }
+  setUser(state, user) {
+    if (user) {
+      state.user = user;
+      state.isLoggedIn = true;
+    } else {
+      state.user = {};
+      state.isLoggedIn = false;
+    }
+  },
 };
 
 const actions = {
-  async login({commit}) {
+  async login() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    const {user} = await firebase.auth().signInWithPopup(provider);
-    commit('setUser',{
-      id:user.uid,
-      name:user.displayName,
-      image:user.photoURL,
-      created_at:firebase.firestore.FieldValue.serverTimestamp(),
-    })
+    await firebase.auth().signInWithPopup(provider);
+  },
+  async logout() {
+    await firebase.auth().signOut();
   }
 };
 
