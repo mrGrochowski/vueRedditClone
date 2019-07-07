@@ -2,17 +2,17 @@
   <section>
     <h1>{{$route.params.name}}</h1>
 
-    <form>
+    <form @submit="onCreatePost()">
       <b-field label="Title">
-        <b-input value=""></b-input>
+        <b-input v-model="post.title"></b-input>
       </b-field>
       
       <b-field label="Decription">
-            <b-input type="textarea"></b-input>
+            <b-input type="textarea" v-model="post.description"></b-input>
       </b-field>
 
       <b-field label="URL">
-        <b-input></b-input>
+        <b-input v-model="post.URL" type="url"></b-input>
       </b-field>
 
       
@@ -23,10 +23,25 @@
 </template>
 
 <script>
-  export default {
-
-  }
-
+import {mapState, mapActions} from "vuex";
+export default {
+  data:()=>({
+    post:{
+      title:'',
+      description:'',
+      URL:''
+    }
+  }),
+  computed : mapState('subreddits',['subreddits']),
+  methods: {
+    onCreatePost(post){
+      if(post.title && (post.description || post.URL)){
+        await this.createPost(post)
+      }
+    }    
+  },
+ 
+}
 </script>
 
 <style>
